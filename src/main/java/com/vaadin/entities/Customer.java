@@ -29,7 +29,15 @@ public class Customer {
     private Gender gender;
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
-    private Set<Order> orders = new HashSet<>();
+    private Set<CustomerOrder> orders = new HashSet<>();
+
+    public Set<CustomerOrder> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<CustomerOrder> orders) {
+        this.orders = orders;
+    }
 
     public Long getId() {
         return id;
@@ -79,13 +87,6 @@ public class Customer {
         this.birthday = birthday;
     }
 
-    public Set<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(Set<Order> orders) {
-        this.orders = orders;
-    }
 
     public Customer() {
     }
@@ -100,13 +101,7 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "Customer{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", birthday=" + birthday +
-                '}';
+        return  firstName + " " + lastName;
     }
 
     public boolean isPersisted() {

@@ -1,7 +1,6 @@
 package com.vaadin.views;
 
-import com.vaadin.entities.Customer;
-import com.vaadin.entities.Order;
+import com.vaadin.entities.CustomerOrder;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.service.CustomerService;
@@ -9,6 +8,8 @@ import com.vaadin.service.OrderService;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -20,34 +21,38 @@ import java.util.List;
 @UIScope
 @SpringView(name = OrderView.VIEW_NAME)
 public class OrderView extends VerticalLayout implements View {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrderView.class);
 
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private CustomerService customerService;
+
     private OrderForm orderForm;
 
-    public static final String VIEW_NAME = "differentView";
-    private Grid<Order> grid = new Grid<>(Order.class);
+    public static final String VIEW_NAME = "Orders";
+    private Grid<CustomerOrder> grid = new Grid<>(CustomerOrder.class);
     private HorizontalLayout layout;
 
     @PostConstruct
     void init() {
-        orderForm = new OrderForm(this, orderService);
-        Button addCustomerBtn = new Button("Add new customer");
-        addCustomerBtn.addClickListener(e -> {
+        layout = new HorizontalLayout();
+        orderForm = new OrderForm(this, orderService, customerService);
+        Button addOrderBtn = new Button("Add new order");
+        addOrderBtn.addClickListener(e -> {
 
             if (orderForm.isVisible()) {
                 orderForm.setVisible(false);
             } else {
                 orderForm.setVisible(true);
-                orderForm.setOrder(new Order());
+                orderForm.setCustomerOrder(new CustomerOrder());
             }
         });
 
         setGrid();
 
-        HorizontalLayout toolbar = new HorizontalLayout(addCustomerBtn);
+        HorizontalLayout toolbar = new HorizontalLayout(addOrderBtn);
         layout.addComponents(grid, orderForm);
         layout.setSizeFull();
         grid.setSizeFull();
@@ -65,13 +70,13 @@ public class OrderView extends VerticalLayout implements View {
 
     private void setGrid() {
         grid.setSizeFull();
-
+        grid.setColumns("product", "quantity", "customer");
         grid.asSingleSelect().addValueChangeListener(event -> {
             if (event.getValue() == null) {
                 orderForm.setVisible(false);
             } else {
                 orderForm.setVisible(true);
-                orderForm.setOrder(event.getValue());
+                orderForm.setCustomerOrder(event.getValue());
             }
         });
 
@@ -79,9 +84,9 @@ public class OrderView extends VerticalLayout implements View {
 
     public void refreshTable() {
 
-        List<Order> orders = orderService.findAll();
+        List<CustomerOrder> customerOrders = orderService.findAll();
 
-        grid.setItems(orders);
+        grid.setItems(customerOrders);
     }
 }
 

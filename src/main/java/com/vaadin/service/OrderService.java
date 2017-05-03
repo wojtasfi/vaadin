@@ -1,7 +1,7 @@
 package com.vaadin.service;
 
 import com.vaadin.dao.OrderRepository;
-import com.vaadin.entities.Order;
+import com.vaadin.entities.CustomerOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,15 +16,15 @@ public class OrderService {
     @Autowired
     OrderRepository orderRepository;
 
-    public void delete(Order order) {
-        orderRepository.delete(order);
+    public void delete(CustomerOrder customerOrder) {
+        orderRepository.delete(customerOrder);
     }
 
-    public List<Order> findAll() {
+    public List<CustomerOrder> findAll() {
         return orderRepository.findAll();
     }
 
-    public void save(Order order) {
-        orderRepository.save(order);
+    public void save(CustomerOrder customerOrder) {
+        orderRepository.save(customerOrder);
     }
 }

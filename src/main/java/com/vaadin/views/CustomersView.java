@@ -2,6 +2,7 @@ package com.vaadin.views;
 
 import com.vaadin.data.Binder;
 import com.vaadin.entities.Customer;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
@@ -35,7 +36,6 @@ public class CustomersView extends VerticalLayout implements View {
     private CustomerForm customerForm;
     private Grid<Customer> grid = new Grid<>(Customer.class);
     private TextField filterText = new TextField();
-    private Button deleteSelected = new Button("Delete selected");
     private HorizontalLayout layout;
     @PostConstruct
     void init() {
@@ -46,7 +46,7 @@ public class CustomersView extends VerticalLayout implements View {
         filterText.addValueChangeListener(e -> refreshTable());
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
 
-        Button clearFilterTextBtn = new Button();
+        Button clearFilterTextBtn = new Button(VaadinIcons.CLOSE);
         clearFilterTextBtn.setDescription("Clear the current filter");
         clearFilterTextBtn.addClickListener(e -> filterText.clear());
 
